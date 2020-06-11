@@ -1,6 +1,6 @@
 /*
 Building while viewing the main file gives the correct output.
-Building while on anyother file gives the output of the previous build.
+Building while on any other file gives the output of the previous build.
 Not sure why this happens, mostly it is problem with the way VS code's task.json
 builds a project. Running the code using the run button (code runner) gives the
 correct output, irrespective of the file currently being viewed.

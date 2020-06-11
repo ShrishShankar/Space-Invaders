@@ -1,4 +1,5 @@
 #include "game.h"
+#include "Entity.h"
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "map.h"
@@ -6,6 +7,7 @@
 
 GameObject *spaceship;
 Map *map;
+Entity *alien;
 
 Game::Game() {}
 Game::~Game() {}
@@ -14,7 +16,10 @@ SDL_Renderer *Game::renderer = nullptr;
 
 void Game::init(const char *title, int xpos, int ypos, int width, int height,
                 bool fullscreeen) {
-
+  /*
+  flags defines the state of the window either by the name or
+  some number associated with the name.
+  */
   int flags = 0;
   if (fullscreeen) {
     flags = SDL_WINDOW_FULLSCREEN;
@@ -27,7 +32,8 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
   if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
     std::cout << "Subsystems Initialized...." << std::endl;
 
-    window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+    window = SDL_CreateWindow(title, xpos, ypos, width, height,
+                              flags);
     if (window) {
       std::cout << "Window created!" << std::endl;
     } else {
@@ -48,11 +54,14 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
               << std::endl; // SDL_GetError() specifies the error
   }
   if (TTF_Init() < 0) {
-  std::cout << "TTF_Init():" << TTF_GetError() << std::endl;
+    std::cout << "TTF_Init():" << TTF_GetError() << std::endl;
   }
 
   spaceship = new GameObject("Assets/Spaceship.png", 0, 0);
   map = new Map();
+  alien = new Entity("Assets/test_alien.png", 100, 100);
+  // int idle_alien = alien->createCycle(0, 32, 32, 2, 10);
+  // alien->setCurAnimation(idle_alien);
 }
 
 void Game::handleEvents() {
@@ -67,13 +76,18 @@ void Game::handleEvents() {
   }
 }
 
-void Game::update() { spaceship->Update(); }
+void Game::update() {
+  //spaceship->Update();
+  // alien->updateAnimation();
+  alien->Update();
+}
 
 void Game::render() {
   SDL_RenderClear(renderer);
   // this is where you would add stuff to render
   map->LoadMap();
   TextureManager::Write("hello universe", 100, 100, 255, 0, 0, 255, 20);
+  alien->Render();
   spaceship->Render();
   SDL_RenderPresent(renderer);
 }

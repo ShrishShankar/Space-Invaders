@@ -11,6 +11,20 @@ public:
   void Update();
   void Render();
 
+  void setSource(int x, int y, int w, int h) {
+    srcRect.x = x;
+    srcRect.y = y;
+    srcRect.w = w;
+    srcRect.h = h;
+  }
+
+  void setDestination(int x, int y, int w, int h) {
+    destRect.x = x;
+    destRect.y = y;
+    destRect.w = w;
+    destRect.h = h;
+  }
+
 private:
   int xpos;
   int ypos;
