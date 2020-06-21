@@ -5,7 +5,10 @@
 
 class GameObject {
 public:
-  GameObject(const char *textureSheet, int x, int y);
+  GameObject(const char *textureSheet, int x, int y, bool isAnimated) {
+    if (isAnimated == 1)
+      rev = 0;
+  };
   ~GameObject();
 
   void Update();
@@ -25,12 +28,36 @@ public:
     destRect.h = h;
   }
 
+  int createCycle(int r, int w, int h, int totalFrames, int speed);
+  void setCurAnimation(int c) {
+    begin = 0;
+    curAnim = c;
+  }
+  void updateAnimation();
+  void reverse(bool r) { rev = r; }
+
 private:
   int xpos;
   int ypos;
+  bool isAnimated{0};
 
   SDL_Texture *objTexture;
   SDL_Rect srcRect, destRect;
+
+  // for animation
+  struct cycle {
+    int row;
+    int w;
+    int h;
+    int totalFrames;
+    int speed;
+    int frame;
+  };
+  std::vector<cycle> animations;
+  int curAnim;
+  int begin;
+  bool rev, nAb;
+  int newAnim;
 };
 
 #endif // GameObject_H
