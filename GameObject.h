@@ -2,13 +2,11 @@
 #define GameObject_H
 
 #include "game.h"
+#include <vector>
 
 class GameObject {
 public:
-  GameObject(const char *textureSheet, int x, int y, bool isAnimated) {
-    if (isAnimated == 1)
-      rev = 0;
-  };
+  GameObject(const char *textureSheet, int x, int y, bool isAnimated);
   ~GameObject();
 
   void Update();
