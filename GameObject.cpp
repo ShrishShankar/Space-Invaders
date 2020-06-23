@@ -12,8 +12,6 @@ GameObject::GameObject(const char *textureSheet, int x, int y, bool isAnimated)
   destRect.y = ypos;
   destRect.h = srcRect.h * 2;
   destRect.w = srcRect.w * 2;
-  if (isAnimated == 1)
-    rev = 0;
   // src decides how much of the image will be shown (basically crop).
   // dest decides what is size of the cropped image in the window and where will
   // it be placed.
@@ -27,7 +25,7 @@ void GameObject::Render() {
 
 int GameObject::createCycle(int r, int w, int h, int totalFrames, int speed) {
   cycle tmp;
-  tmp.row = r - 1;
+  tmp.row = r;
   tmp.w = w;
   tmp.h = h;
   tmp.totalFrames = totalFrames;
@@ -43,10 +41,7 @@ void GameObject::updateAnimation() {
             animations[curAnim].w, animations[curAnim].h);
 
   if (begin > animations[curAnim].speed) {
-    if (!rev)
-      animations[curAnim].frame++;
-    if (rev)
-      animations[curAnim].frame--;
+    animations[curAnim].frame++;
     begin = 0;
   }
   begin++;

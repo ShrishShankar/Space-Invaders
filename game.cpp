@@ -5,8 +5,8 @@
 #include <iostream>
 
 GameObject *spaceship;
-Map *map;
 GameObject *alien;
+Map *map;
 
 Game::Game() {}
 Game::~Game() {}
@@ -57,9 +57,9 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
 
   spaceship = new GameObject("Assets/Spaceship.png", 0, 0, 0);
   map = new Map();
-  alien = new GameObject("Assets/test_alien.png", 100, 100, 0);
-  // int idle_alien = alien->createCycle(0, 32, 32, 2, 10);
-  // alien->setCurAnimation(idle_alien);
+  alien = new GameObject("Assets/test_alien_anim.png", 100, 100, 1);
+  int idle_alien = alien->createCycle(0, 32, 32, 2, 10);
+  alien->setCurAnimation(idle_alien);
 }
 
 void Game::handleEvents() {
@@ -76,8 +76,8 @@ void Game::handleEvents() {
 
 void Game::update() {
   // spaceship->Update();
-  // alien->updateAnimation();
-  alien->Update();
+  alien->updateAnimation();
+  // alien->Update();
 }
 
 void Game::render() {

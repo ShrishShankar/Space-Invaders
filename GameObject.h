@@ -32,7 +32,6 @@ public:
     curAnim = c;
   }
   void updateAnimation();
-  void reverse(bool r) { rev = r; }
 
 private:
   int xpos;
@@ -54,7 +53,7 @@ private:
   std::vector<cycle> animations;
   int curAnim;
   int begin;
-  bool rev, nAb;
+  bool nAb;
   int newAnim;
 };
 
