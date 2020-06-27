@@ -32,6 +32,10 @@ public:
     curAnim = c;
   }
   void updateAnimation();
+  void moveRight();
+  void moveLeft();
+  void moveUp();
+  void moveDown();
 
 private:
   int xpos;

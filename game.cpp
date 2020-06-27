@@ -8,6 +8,13 @@ GameObject *spaceship;
 GameObject *alien;
 Map *map;
 
+void ToggleFullscreen(SDL_Window *Window) {
+  Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+  bool IsFullscreen = SDL_GetWindowFlags(Window) & FullscreenFlag;
+  SDL_SetWindowFullscreen(Window, IsFullscreen ? 0 : FullscreenFlag);
+  SDL_ShowCursor(IsFullscreen);
+}
+
 Game::Game() {}
 Game::~Game() {}
 
@@ -55,10 +62,10 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
     std::cout << "TTF_Init():" << TTF_GetError() << std::endl;
   }
 
-  spaceship = new GameObject("Assets/Spaceship.png", 0, 0, 0);
+  spaceship = new GameObject("Assets/Spaceship.png", 0, 576, 0);
   map = new Map();
-  alien = new GameObject("Assets/test_alien_anim.png", 100, 100, 1);
-  int idle_alien = alien->createCycle(0, 32, 32, 2, 10);
+  alien = new GameObject("Assets/test_alien_anim.png", 200, 200, 1);
+  int idle_alien = alien->createCycle(0, 32, 32, 2, 20);
   alien->setCurAnimation(idle_alien);
 }
 
@@ -66,6 +73,16 @@ void Game::handleEvents() {
   SDL_Event event;
   SDL_PollEvent(&event); // Waits indefinitely for the next available event.
   switch (event.type) {
+  case SDL_KEYDOWN:
+    if (event.key.keysym.sym == SDLK_a) {
+      std::cout << "a down - move to the left" << std::endl;
+      spaceship->moveLeft();
+    }
+    if (event.key.keysym.sym == SDLK_d) {
+      std::cout << "d down - move to the right" << std::endl;
+      spaceship->moveRight();
+    }
+    break;
   case SDL_QUIT:
     isRunning = false;
     break;

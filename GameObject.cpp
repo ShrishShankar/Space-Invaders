@@ -49,3 +49,21 @@ void GameObject::updateAnimation() {
     animations[curAnim].frame = 0;
   }
 }
+
+void GameObject::moveRight() {
+  if (destRect.x + 16 <= 736)
+    destRect.x = destRect.x + 16;
+}
+
+void GameObject::moveLeft() {
+  if (destRect.x - 16 >= 0)
+    destRect.x = destRect.x - 16;
+}
+void GameObject::moveUp() {
+  if (destRect.y + 16 <= 640)
+    destRect.y = destRect.y + 64;
+}
+void GameObject::moveDown() {
+  if (destRect.y - 16 >= 0)
+    destRect.y = destRect.y - 64;
+}
