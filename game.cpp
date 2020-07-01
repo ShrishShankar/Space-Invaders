@@ -19,9 +19,10 @@ Game::Game() {}
 Game::~Game() {}
 
 SDL_Renderer *Game::renderer = nullptr;
+int Game::screenHeight;
+int Game::screenWidth;
 
-void Game::init(const char *title, int xpos, int ypos, int width, int height,
-                bool fullscreeen) {
+void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
   /*
   flags defines the state of the window either by the name or
   some number associated with the name.
@@ -38,7 +39,17 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
   if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
     std::cout << "Subsystems Initialized...." << std::endl;
 
-    window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+    SDL_DisplayMode dm;
+    if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
+      std::cout << "SDL_GetDesktopDisplayMode failed: " << SDL_GetError()
+                << std::endl;
+    }
+
+    screenWidth = dm.w;
+    screenHeight = dm.h;
+
+    window = SDL_CreateWindow(title, xpos, ypos, screenWidth / 2,
+                              screenHeight / 2, flags);
     if (window) {
       std::cout << "Window created!" << std::endl;
     } else {
@@ -62,7 +73,8 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height,
     std::cout << "TTF_Init():" << TTF_GetError() << std::endl;
   }
 
-  spaceship = new GameObject("Assets/Spaceship.png", 0, 576, 0);
+  spaceship = new GameObject("Assets/Spaceship.png", 0,
+                             (screenHeight * 9) / 20, 0);
   map = new Map();
   alien = new GameObject("Assets/test_alien_anim.png", 200, 200, 1);
   int idle_alien = alien->createCycle(0, 32, 32, 2, 20);
@@ -82,6 +94,12 @@ void Game::handleEvents() {
       std::cout << "d down - move to the right" << std::endl;
       spaceship->moveRight();
     }
+    if (event.key.keysym.sym == SDLK_f) {
+      ToggleFullscreen(window);
+      std::cout << "Switch" << std::endl;
+      std::cout << "x: " << spaceship->getDestinationx() << std::endl;
+      std::cout << "y: " << spaceship->getDestinationy() << std::endl;
+    }
     break;
   case SDL_QUIT:
     isRunning = false;
@@ -93,7 +111,7 @@ void Game::handleEvents() {
 
 void Game::update() {
   // spaceship->Update();
-  alien->updateAnimation();
+  //alien->updateAnimation();
   // alien->Update();
 }
 
@@ -101,8 +119,8 @@ void Game::render() {
   SDL_RenderClear(renderer);
   // this is where you would add stuff to render
   map->LoadMap();
-  TextureManager::Write("hello universe", 100, 100, 255, 0, 0, 255, 20);
-  alien->Render();
+  //TextureManager::Write("hello universe", 100, 100, 255, 0, 0, 255, 20);
+  //alien->Render();
   spaceship->Render();
   SDL_RenderPresent(renderer);
 }
@@ -112,5 +130,8 @@ void Game::clean() {
   SDL_DestroyWindow(window);
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
+  delete spaceship;
+  delete alien;
+  delete map;
   std::cout << "Game is cleaned" << std::endl;
 }

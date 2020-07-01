@@ -7,7 +7,7 @@
 class GameObject {
 public:
   GameObject(const char *textureSheet, int x, int y, bool isAnimated);
-  ~GameObject();
+  ~GameObject(){std::cout << "GameObject is deleted" << std::endl;};
 
   void Update();
   void Render();
@@ -17,6 +17,14 @@ public:
     srcRect.y = y;
     srcRect.w = w;
     srcRect.h = h;
+  }
+
+  int getDestinationx(){
+    return destRect.x;
+  }
+
+  int getDestinationy(){
+    return destRect.y;
   }
 
   void setDestination(int x, int y, int w, int h) {

@@ -2,10 +2,16 @@
 
 SDL_Texture *TextureManager::LoadTexture(const char *filename) {
 
-  SDL_Surface *tempSurface = IMG_Load(filename);
-  SDL_Texture *texture =
-      SDL_CreateTextureFromSurface(Game::renderer, tempSurface);
-  SDL_FreeSurface(tempSurface);
+  // SDL_Surface *tempSurface = IMG_Load(filename);
+  // SDL_Texture *texture =
+  //     SDL_CreateTextureFromSurface(Game::renderer, tempSurface);
+  // SDL_FreeSurface(tempSurface);
+
+  SDL_Texture *texture = SDL_CreateTexture(
+      Game::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+      Game::screenWidth/2, Game::screenHeight/2);
+
+  texture = IMG_LoadTexture(Game::renderer, filename);
 
   return texture;
 }

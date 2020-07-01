@@ -10,8 +10,8 @@ GameObject::GameObject(const char *textureSheet, int x, int y, bool isAnimated)
   srcRect.h = 32;
   destRect.x = xpos;
   destRect.y = ypos;
-  destRect.h = srcRect.h * 2;
-  destRect.w = srcRect.w * 2;
+  destRect.h = (Game::screenHeight) / 20;
+  destRect.w = (Game::screenHeight) / 20;
   // src decides how much of the image will be shown (basically crop).
   // dest decides what is size of the cropped image in the window and where will
   // it be placed.
@@ -51,19 +51,19 @@ void GameObject::updateAnimation() {
 }
 
 void GameObject::moveRight() {
-  if (destRect.x + 16 <= 736)
+  if (destRect.x + Game::screenHeight/60 <= Game::screenWidth/2 - Game::screenHeight/20)
     destRect.x = destRect.x + 16;
 }
 
 void GameObject::moveLeft() {
-  if (destRect.x - 16 >= 0)
+  if (destRect.x - Game::screenHeight/60 >= 0)
     destRect.x = destRect.x - 16;
 }
 void GameObject::moveUp() {
-  if (destRect.y + 16 <= 640)
+  if (destRect.y + Game::screenHeight/60 <= Game::screenHeight/2)
     destRect.y = destRect.y + 64;
 }
 void GameObject::moveDown() {
-  if (destRect.y - 16 >= 0)
+  if (destRect.y - Game::screenHeight/60 >= 0)
     destRect.y = destRect.y - 64;
 }

@@ -11,8 +11,7 @@ public:
   Game();
   ~Game();
 
-  void init(const char *title, int xpos, int ypos, int width, int height,
-            bool fullscreeen);
+  void init(const char *title, int xpos, int ypos, bool fullscreeen);
 
   void handleEvents();
   void update();
@@ -21,8 +20,11 @@ public:
 
   bool running() { return isRunning; }
 
-  static SDL_Renderer *renderer; // declaring a renderer
-
+  static SDL_Renderer
+      *renderer; // declaring a renderer, the renderer is a public variable
+                 // because other classes are using it.
+  static int screenWidth, screenHeight;
+  
 private:
   bool isRunning;
   SDL_Window *window; // declaraing a window

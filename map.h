@@ -6,7 +6,7 @@
 class Map {
 public:
   Map();
-  ~Map();
+  ~Map() { std::cout << "Map is deleted" << std::endl; }
   void LoadMap();
   void DrawMap();
 
