@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(const char *textureSheet, int x, int y, bool isAnimated)
+GameObject::GameObject(const char *textureSheet, int x, int y, int w, int h, bool isAnimated)
     : xpos{x}, ypos{y} {
   objTexture = TextureManager::LoadTexture(textureSheet);
   srcRect.x = 0;
@@ -10,8 +10,8 @@ GameObject::GameObject(const char *textureSheet, int x, int y, bool isAnimated)
   srcRect.h = 32;
   destRect.x = xpos;
   destRect.y = ypos;
-  destRect.h = (Game::screenHeight) / 20;
-  destRect.w = (Game::screenHeight) / 20;
+  destRect.h = h;
+  destRect.w = w;
   // src decides how much of the image will be shown (basically crop).
   // dest decides what is size of the cropped image in the window and where will
   // it be placed.

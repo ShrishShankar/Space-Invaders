@@ -6,8 +6,8 @@
 
 class GameObject {
 public:
-  GameObject(const char *textureSheet, int x, int y, bool isAnimated);
-  ~GameObject(){std::cout << "GameObject is deleted" << std::endl;};
+  GameObject(const char *textureSheet, int x, int y, int w, int h, bool isAnimated);
+  ~GameObject() { std::cout << "GameObject is deleted" << std::endl; };
 
   void Update();
   void Render();
@@ -19,19 +19,16 @@ public:
     srcRect.h = h;
   }
 
-  int getDestinationx(){
-    return destRect.x;
-  }
+  int getDestinationx() { return destRect.x; }
 
-  int getDestinationy(){
-    return destRect.y;
-  }
+  int getDestinationy() { return destRect.y; }
 
-  void setDestination(int x, int y, int w, int h) {
+  int getShots(){return shots;}
+  void setShots(int shots){shots = shots;}
+
+  void setDestination(int x, int y) {
     destRect.x = x;
     destRect.y = y;
-    destRect.w = w;
-    destRect.h = h;
   }
 
   int createCycle(int r, int w, int h, int totalFrames, int speed);
@@ -65,8 +62,7 @@ private:
   std::vector<cycle> animations;
   int curAnim;
   int begin;
-  bool nAb;
-  int newAnim;
+  int shots{0};
 };
 
 #endif // GameObject_H
