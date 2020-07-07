@@ -6,7 +6,8 @@
 
 class GameObject {
 public:
-  GameObject(const char *textureSheet, int x, int y, int w, int h, bool isAnimated);
+  GameObject(const char *textureSheet, int x, int y, int w, int h,
+             bool isAnimated);
   ~GameObject() { std::cout << "GameObject is deleted" << std::endl; };
 
   void Update();
@@ -23,8 +24,7 @@ public:
 
   int getDestinationy() { return destRect.y; }
 
-  int getShots(){return shots;}
-  void setShots(int shots){shots = shots;}
+  void setShots(int shots) { shots = shots; }
 
   void setDestination(int x, int y) {
     destRect.x = x;
@@ -42,9 +42,9 @@ public:
   void moveUp();
   void moveDown();
 
+  friend bool collision(GameObject *a, GameObject *b);
+
 private:
-  int xpos;
-  int ypos;
   bool isAnimated{0};
 
   SDL_Texture *objTexture;
@@ -62,7 +62,6 @@ private:
   std::vector<cycle> animations;
   int curAnim;
   int begin;
-  int shots{0};
 };
 
 #endif // GameObject_H

@@ -8,9 +8,6 @@
 
 class Game {
 public:
-  Game();
-  ~Game();
-
   void init(const char *title, int xpos, int ypos, bool fullscreeen);
 
   void handleEvents();
@@ -24,7 +21,7 @@ public:
       *renderer; // declaring a renderer, the renderer is a public variable
                  // because other classes are using it.
   static int screenWidth, screenHeight;
-  
+
 private:
   bool isRunning;
   SDL_Window *window; // declaraing a window

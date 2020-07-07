@@ -3,7 +3,7 @@
         "javascript": "node",
         "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
         "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-        "cpp": "cd $dir && g++ -std=c++11 *.cpp -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf -I/Library/Frameworks/SDL2.framework/Versions/A/Headers -I/Library/Frameworks/SDL2_image.framework/Headers -I/Library/Frameworks/SDL2_ttf.framework/Headers -o build/$fileNameWithoutExt.exe && $dir/build/$fileNameWithoutExt.exe",
+        "cpp": "cd $dir && g++ -std=c++11 *.cpp -F/Library/Frameworks -framework SDL2 -framework SDL2_image -framework SDL2_ttf -I/Library/Frameworks/SDL2.framework/Versions/A/Headers -I/Library/Frameworks/SDL2_image.framework/Headers -I/Library/Frameworks/SDL2_ttf.framework/Headers -o Build/$fileNameWithoutExt.exe && $dir/Build/$fileNameWithoutExt.exe",
         "objective-c": "cd $dir && gcc -framework Cocoa $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
         "php": "php",
         "python": "python -u",

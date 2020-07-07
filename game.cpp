@@ -5,10 +5,10 @@
 #include <iostream>
 #include <vector>
 
-GameObject *spaceship;
-GameObject *alien;
-std::vector<GameObject> laser_beams;
-Map *map;
+GameObject *spaceship{NULL};
+GameObject *alien{NULL};
+std::vector<GameObject *> laser_beams;
+Map *map{NULL};
 
 void ToggleFullscreen(SDL_Window *Window) {
   Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
@@ -16,9 +16,6 @@ void ToggleFullscreen(SDL_Window *Window) {
   SDL_SetWindowFullscreen(Window, IsFullscreen ? 0 : FullscreenFlag);
   SDL_ShowCursor(IsFullscreen);
 }
-
-Game::Game() {}
-Game::~Game() {}
 
 SDL_Renderer *Game::renderer = nullptr;
 int Game::screenHeight;
@@ -90,34 +87,47 @@ void Game::handleEvents() {
   SDL_Event event;
   SDL_PollEvent(&event); // Waits indefinitely for the next available event.
   switch (event.type) {
+
   case SDL_KEYDOWN:
-    if (event.key.keysym.sym == SDLK_a) {
-      std::cout << "a down - move to the left" << std::endl;
-      spaceship->moveLeft();
-    }
-    if (event.key.keysym.sym == SDLK_d) {
-      std::cout << "d down - move to the right" << std::endl;
-      spaceship->moveRight();
-    }
-    if (event.key.keysym.sym == SDLK_f) {
+    switch (event.key.keysym.sym) {
+
+    case SDLK_f:
       ToggleFullscreen(window);
       std::cout << "Switch" << std::endl;
       std::cout << "x: " << spaceship->getDestinationx() << std::endl;
       std::cout << "y: " << spaceship->getDestinationy() << std::endl;
-    }
-    if (event.key.keysym.sym == SDLK_ESCAPE) {
+      break;
+
+    case SDLK_ESCAPE:
       // add pause menu
       isRunning = false;
-    }
-    if (event.key.keysym.sym == SDLK_SPACE) {
-      laser_beams.push_back(
-          GameObject("Assets/laser_beam.png", spaceship->getDestinationx() + 20,
-                     spaceship->getDestinationy() - 8, 5, 8, 0));
+      break;
+
+    case SDLK_a:
+      std::cout << "a down - move to the left" << std::endl;
+      spaceship->moveLeft();
+      break;
+
+    case SDLK_d:
+      std::cout << "d down - move to the right" << std::endl;
+      spaceship->moveRight();
+      break;
+
+    case SDLK_SPACE:
+      laser_beams.push_back(new GameObject(
+          "Assets/laser_beam.png", spaceship->getDestinationx() + 20,
+          spaceship->getDestinationy() - 8, 5, 8, 0));
+      break;
+
+    default:
+      break;
     }
     break;
+
   case SDL_QUIT:
     isRunning = false;
     break;
+
   default:
     break;
   }
@@ -126,17 +136,33 @@ void Game::handleEvents() {
 void Game::update() {
   // spaceship->Update();
   for (int i = 0; i < laser_beams.size(); i++) {
-    if (laser_beams.at(i).getDestinationx() >= screenWidth / 2 ||
-        laser_beams.at(i).getDestinationy() >= screenHeight / 2)
+    if (laser_beams.at(i)->getDestinationx() >= screenWidth / 2 ||
+        laser_beams.at(i)->getDestinationy() <= 0) {
+      delete laser_beams.at(i);
+      laser_beams.at(i) = NULL;
       laser_beams.erase(laser_beams.begin() + i);
-    else {
-      int x = laser_beams.at(i).getDestinationx();
-      int y = laser_beams.at(i).getDestinationy();
-      laser_beams.at(i).setDestination(x, y - 3);
+      std::cout << laser_beams.size() << std::endl;
+      std::cout << "laser beam out-of-bounds" << std::endl;
+    } else {
+      int x = laser_beams.at(i)->getDestinationx();
+      int y = laser_beams.at(i)->getDestinationy();
+      laser_beams.at(i)->setDestination(x, y - 20);
     }
   }
-  alien->updateAnimation();
-  // alien->Update();
+  if (alien)
+    // alien->Update();
+    alien->updateAnimation();
+  for (int i = 0; i < laser_beams.size(); i++) {
+    if (alien && collision(alien, laser_beams.at(i))) {
+      std::cout << laser_beams.size() << std::endl;
+      delete alien;
+      alien = NULL;
+      delete laser_beams.at(i);
+      laser_beams.at(i) = NULL;
+      laser_beams.erase(laser_beams.begin() + i);
+      std::cout << "laser beam hit alien" << std::endl;
+    }
+  }
 }
 
 void Game::render() {
@@ -144,10 +170,12 @@ void Game::render() {
   // this is where you would add stuff to render
   map->LoadMap();
   TextureManager::Write("hello universe", 100, 100, 255, 0, 0, 255, 20);
-  alien->Render();
-  spaceship->Render();
-  for (int i = 0; i < laser_beams.size(); i++) {
-    laser_beams.at(i).Render();
+  if (alien)
+    alien->Render();
+  if (spaceship)
+    spaceship->Render();
+  for (GameObject *laser : laser_beams) {
+    laser->Render();
   }
   SDL_RenderPresent(renderer);
 }
@@ -157,9 +185,16 @@ void Game::clean() {
   SDL_DestroyWindow(window);
   SDL_DestroyRenderer(renderer);
   SDL_Quit();
-  delete spaceship;
-  delete alien;
+  if (spaceship)
+    delete spaceship;
+  if (alien)
+    delete alien;
   delete map;
+  for (GameObject *laser : laser_beams) {
+    delete laser;
+    laser = nullptr;
+    std::cout << "cleaning laser" << std::endl;
+  }
   laser_beams.clear();
   std::cout << "Game is cleaned" << std::endl;
 }

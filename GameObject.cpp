@@ -1,15 +1,15 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(const char *textureSheet, int x, int y, int w, int h, bool isAnimated)
-    : xpos{x}, ypos{y} {
+GameObject::GameObject(const char *textureSheet, int x, int y, int w, int h,
+                       bool isAnimated) {
   objTexture = TextureManager::LoadTexture(textureSheet);
   srcRect.x = 0;
   srcRect.y = 0;
   srcRect.w = 32;
   srcRect.h = 32;
-  destRect.x = xpos;
-  destRect.y = ypos;
+  destRect.x = x;
+  destRect.y = y;
   destRect.h = h;
   destRect.w = w;
   // src decides how much of the image will be shown (basically crop).
@@ -51,19 +51,43 @@ void GameObject::updateAnimation() {
 }
 
 void GameObject::moveRight() {
-  if (destRect.x + Game::screenHeight/60 <= Game::screenWidth/2 - Game::screenHeight/20)
+  if (destRect.x + Game::screenHeight / 60 <=
+      Game::screenWidth / 2 - Game::screenHeight / 20)
     destRect.x = destRect.x + 16;
 }
 
 void GameObject::moveLeft() {
-  if (destRect.x - Game::screenHeight/60 >= 0)
+  if (destRect.x - Game::screenHeight / 60 >= 0)
     destRect.x = destRect.x - 16;
 }
 void GameObject::moveUp() {
-  if (destRect.y + Game::screenHeight/60 <= Game::screenHeight/2)
+  if (destRect.y + Game::screenHeight / 60 <= Game::screenHeight / 2)
     destRect.y = destRect.y + 64;
 }
 void GameObject::moveDown() {
-  if (destRect.y - Game::screenHeight/60 >= 0)
+  if (destRect.y - Game::screenHeight / 60 >= 0)
     destRect.y = destRect.y - 64;
+}
+
+bool collision(GameObject *a, GameObject *b) {
+  int left_a = a->destRect.x;
+  int right_a = left_a + a->destRect.w;
+  int top_a = a->destRect.y;
+  int bottom_a = top_a + a->destRect.h;
+
+  int left_b = b->destRect.x;
+  int right_b = left_b + b->destRect.w;
+  int top_b = b->destRect.y;
+  int bottom_b = top_b + b->destRect.h;
+
+  if (((left_a < left_b && left_b < right_a) ||
+       (left_a < right_b && right_b < right_a)) &&
+      ((top_a < top_b && top_b < bottom_a) ||
+       (top_a < bottom_b && bottom_b < bottom_a)))
+
+    return true;
+
+  else {
+    return false;
+  }
 }

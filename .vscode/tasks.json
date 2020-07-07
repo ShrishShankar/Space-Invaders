@@ -20,7 +20,7 @@
                 "-I/Library/Frameworks/SDL2_image.framework/Headers",
                 "-I/Library/Frameworks/SDL2_ttf.framework/Headers",
                 "-o",
-                "${fileDirname}/build/${fileBasenameNoExtension}.exe",
+                "${fileDirname}/Build/${fileBasenameNoExtension}.exe",
             ],
             "options": {
                 "cwd": "/usr/bin"
