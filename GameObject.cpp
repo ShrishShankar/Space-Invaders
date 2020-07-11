@@ -50,23 +50,22 @@ void GameObject::updateAnimation() {
   }
 }
 
-void GameObject::moveRight() {
-  if (destRect.x + Game::screenHeight / 60 <=
-      Game::screenWidth / 2 - Game::screenHeight / 20)
-    destRect.x = destRect.x + 16;
+void GameObject::moveRight(float p) {
+  if (destRect.x + p <= Game::screenWidth / 1.5 - destRect.w)
+    destRect.x = destRect.x + p;
 }
 
-void GameObject::moveLeft() {
-  if (destRect.x - Game::screenHeight / 60 >= 0)
-    destRect.x = destRect.x - 16;
+void GameObject::moveLeft(float p) {
+  if (destRect.x - p >= 0)
+    destRect.x = destRect.x - p;
 }
-void GameObject::moveUp() {
-  if (destRect.y + Game::screenHeight / 60 <= Game::screenHeight / 2)
-    destRect.y = destRect.y + 64;
+void GameObject::moveUp(float p) {
+  if (destRect.y - p >= 0)
+    destRect.y = destRect.y - p;
 }
-void GameObject::moveDown() {
-  if (destRect.y - Game::screenHeight / 60 >= 0)
-    destRect.y = destRect.y - 64;
+void GameObject::moveDown(float p) {
+  if (destRect.y + p <= Game::screenHeight / 1.5 - destRect.h)
+    destRect.y = destRect.y + p;
 }
 
 bool collision(GameObject *a, GameObject *b) {
@@ -90,4 +89,10 @@ bool collision(GameObject *a, GameObject *b) {
   else {
     return false;
   }
+}
+
+void deleteVectorObjectPointers(std::vector<GameObject *> *vec, int i) {
+  delete vec->at(i);
+  vec->at(i) = nullptr;
+  vec->erase(vec->begin() + i);
 }

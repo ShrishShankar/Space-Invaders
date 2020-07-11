@@ -21,6 +21,8 @@ public:
       *renderer; // declaring a renderer, the renderer is a public variable
                  // because other classes are using it.
   static int screenWidth, screenHeight;
+  int windowWidth, windowHeight;
+  int frameCount;
 
 private:
   bool isRunning;

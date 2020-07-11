@@ -31,18 +31,22 @@ public:
     destRect.y = y;
   }
 
+  int getDestWidth() { return destRect.w; }
+  int getDestHeight() { return destRect.h; }
+
   int createCycle(int r, int w, int h, int totalFrames, int speed);
   void setCurAnimation(int c) {
     begin = 0;
     curAnim = c;
   }
   void updateAnimation();
-  void moveRight();
-  void moveLeft();
-  void moveUp();
-  void moveDown();
+  void moveRight(float p);
+  void moveLeft(float p);
+  void moveUp(float p);
+  void moveDown(float p);
 
   friend bool collision(GameObject *a, GameObject *b);
+  friend void deleteVectorObjectPointers(std::vector<GameObject *> *vec, int i);
 
 private:
   bool isAnimated{0};

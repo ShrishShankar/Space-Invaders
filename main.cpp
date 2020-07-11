@@ -6,6 +6,8 @@ builds a project. Running the code using the run button (code runner) gives the
 correct output, irrespective of the file currently being viewed.
 */
 #include "game.h"
+#include <stdlib.h>
+#include <time.h>
 
 Game *game{nullptr};
 
@@ -22,6 +24,7 @@ int main(int argc, char *argv[]) {
 
   while (game->running()) {
 
+    srand((unsigned)time(0));
     frameStart = SDL_GetTicks();
 
     game->handleEvents();
@@ -34,11 +37,12 @@ int main(int argc, char *argv[]) {
       /*
       The desktop's framerate is 60FPS (usually), so if the update (or
       rendering) is faster it looks like the gameobject is jumping instead of
-      moving smoothly, because the rendering more than once before the desktop
-      frame changes even once.
+      moving smoothly, because the rendering takes place more than once before
+      the desktop frame changes even once.
       */
       SDL_Delay(mSPF - frameTime);
     }
+    game->frameCount++;
   }
 
   game->clean();
