@@ -2,7 +2,8 @@
 #include "TextureManager.h"
 
 GameObject::GameObject(const char *textureSheet, int x, int y, int w, int h,
-                       bool isAnimated) {
+                       int lives, bool isAnimated)
+    : lives{lives} {
   objTexture = TextureManager::LoadTexture(textureSheet);
   srcRect.x = 0;
   srcRect.y = 0;

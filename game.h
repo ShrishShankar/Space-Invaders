@@ -14,6 +14,9 @@ public:
   void update();
   void render();
   void clean();
+  void Restart();
+  void partialClean();
+  void partialInit();
 
   bool running() { return isRunning; }
 
@@ -23,9 +26,11 @@ public:
   static int screenWidth, screenHeight;
   int windowWidth, windowHeight;
   int frameCount;
+  int playerScore{0};
+  bool isStart{true};
 
 private:
-  bool isRunning;
+  bool isRunning{1};
   SDL_Window *window; // declaraing a window
 };
 

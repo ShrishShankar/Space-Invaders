@@ -9,7 +9,7 @@ SDL_Texture *TextureManager::LoadTexture(const char *filename) {
 
   SDL_Texture *texture = SDL_CreateTexture(
       Game::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-      Game::screenWidth/2, Game::screenHeight/2);
+      Game::screenWidth / 2, Game::screenHeight / 2);
 
   texture = IMG_LoadTexture(Game::renderer, filename);
 
@@ -20,7 +20,7 @@ void TextureManager::Draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest) {
   SDL_RenderCopy(Game::renderer, texture, &src, &dest);
 }
 
-void TextureManager::Write(const char *msg, int x, int y, int r, int b, int g,
+void TextureManager::Write(std::string msg, int x, int y, int r, int b, int g,
                            int a, int size) {
   SDL_Surface *TextSurface;
   SDL_Texture *Texture;
@@ -36,7 +36,9 @@ void TextureManager::Write(const char *msg, int x, int y, int r, int b, int g,
   TextColor.g = g;
   TextColor.a = a;
 
-  TextSurface = TTF_RenderText_Solid(font, msg, TextColor);
+  const char *text = msg.c_str();
+
+  TextSurface = TTF_RenderText_Solid(font, text, TextColor);
 
   SDL_Rect TextDest;
   // Setting the destination rectangle

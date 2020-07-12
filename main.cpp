@@ -24,9 +24,12 @@ int main(int argc, char *argv[]) {
 
   while (game->running()) {
 
-    srand((unsigned)time(0));
-    frameStart = SDL_GetTicks();
+    // if (game->isStart) {
+    //   game->partialInit();
+    //   srand((unsigned)time(0));
+    // }
 
+    frameStart = SDL_GetTicks();
     game->handleEvents();
     game->update();
     game->render();
