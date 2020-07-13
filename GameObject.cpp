@@ -18,8 +18,6 @@ GameObject::GameObject(const char *textureSheet, int x, int y, int w, int h,
   // it be placed.
 }
 
-void GameObject::Update() {}
-
 void GameObject::Render() {
   SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
 }

@@ -8,11 +8,17 @@
 #include <time.h>
 #include <vector>
 
+// Declaring the elements of the game
+SDL_Renderer *Game::renderer = nullptr;
+int Game::screenHeight;
+int Game::screenWidth;
+
 GameObject *spaceship{nullptr};
 GameObject *ufo{nullptr};
 GameObject *aliens[5][10];
 std::vector<GameObject *> laser_beams;
 std::vector<GameObject *> alien_beams;
+
 Map *map{nullptr};
 
 struct explosion {
@@ -34,6 +40,11 @@ std::string livesleft = "";
 bool isRestart{false};
 int alien_killCount{0};
 
+/**
+ * This function toggles between the default window size and fullscreen.
+ *@param Window whose fullscreen state needs to be toggled.
+ *@return returns nothing.
+ */
 void ToggleFullscreen(SDL_Window *Window) {
   Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
   bool IsFullscreen = SDL_GetWindowFlags(Window) & FullscreenFlag;
@@ -41,10 +52,15 @@ void ToggleFullscreen(SDL_Window *Window) {
   SDL_ShowCursor(IsFullscreen);
 }
 
-SDL_Renderer *Game::renderer = nullptr;
-int Game::screenHeight;
-int Game::screenWidth;
-
+/**
+ * The init() function initiallizes the SDL subsystems, creates the window, the
+ *renderer and all the primary GameObjects.
+ *@param title Heading/name of the window
+ *@param xpos the x coordinate of the window
+ *@param ypos the y coordinate of the window
+ *@param fullscreen true for fullscreen state and false for not fullscreen state
+ *@return returns nothing.
+ */
 void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
   /*
   flags defines the state of the window either by the name or
@@ -54,7 +70,7 @@ void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
   if (fullscreeen) {
     flags = SDL_WINDOW_FULLSCREEN;
   }
-  // isStart = false;
+  // isStart = false;  // Part of the restarting mechanism
 
   /*
   Now we initialize SDL. You can't call any SDL functions without initializing
@@ -63,6 +79,7 @@ void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
   if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
     std::cout << "Subsystems Initialized...." << std::endl;
 
+    // Acquiring the resolution of the display device.
     SDL_DisplayMode dm;
     if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
       std::cout << "SDL_GetDesktopDisplayMode failed: " << SDL_GetError()
@@ -77,6 +94,7 @@ void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
 
     x_of_leftmost_alien = windowWidth;
 
+    // Creating the window
     window =
         SDL_CreateWindow(title, xpos, ypos, windowWidth, windowHeight, flags);
     if (window) {
@@ -86,6 +104,7 @@ void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
                 << std::endl; // SDL_GetError() specifies the error
     }
 
+    // Creating the renderer
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer) {
       SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -98,18 +117,25 @@ void Game::init(const char *title, int xpos, int ypos, bool fullscreeen) {
     std::cout << "Error: " << SDL_GetError()
               << std::endl; // SDL_GetError() specifies the error
   }
+
+  // Initializing the fonts library (TTF)
   if (TTF_Init() < 0) {
     std::cout << "TTF_Init():" << TTF_GetError() << std::endl;
   }
 
+  // Initializing the primary GameObjects
   partialInit();
 }
 
+/**
+ *This function handles all the events and inputs in the game.
+ */
 void Game::handleEvents() {
   SDL_Event event;
   SDL_PollEvent(&event); // Waits indefinitely for the next available event.
   switch (event.type) {
 
+  // Keyboard inputs
   case SDL_KEYDOWN:
     switch (event.key.keysym.sym) {
 
@@ -118,7 +144,7 @@ void Game::handleEvents() {
       break;
 
     case SDLK_ESCAPE:
-      // add pause menu
+      // add a pause menu
       isRunning = false;
       break;
 
@@ -132,6 +158,7 @@ void Game::handleEvents() {
         spaceship->moveRight(20);
       break;
 
+      // Part of the incomplete restart mechanism
       // case SDLK_r:
       //   if (isRestart)
       //     Restart();
@@ -144,6 +171,7 @@ void Game::handleEvents() {
 
   case SDL_KEYUP:
     switch (event.key.keysym.sym) {
+
     case SDLK_SPACE:
       if (spaceship && SDL_GetTicks() > 4000 && !isRestart) {
         laser_beams.push_back(
@@ -166,8 +194,13 @@ void Game::handleEvents() {
   }
 }
 
+/**
+ * This function updates the states, positions and interactions of all the
+ * GameObject. It also keeps track of the player's points.
+ */
 void Game::update() {
 
+  // Calculates the position and state of the lasers from the spaceship.
   if (spaceship && SDL_GetTicks() > 4000 && !isRestart) {
     for (int i = 0; i < laser_beams.size(); i++) {
       if (laser_beams.at(i)->getDestinationy() <= 0) {
@@ -180,6 +213,7 @@ void Game::update() {
       }
     }
 
+    // Controls the movement and states of the UFO
     if (ufo && frameCount % 1800 == 0 && frameCount >= 1800) {
       ufo->setDestination(windowWidth + (2 * ufo->getDestWidth()), 50);
       std::cout << "y of ufo: " << ufo->getDestinationy() << std::endl;
@@ -207,6 +241,8 @@ void Game::update() {
       }
     }
 
+    // Updates the animation
+    // and finds the position of the aliens at the ends of the array.
     int count = 0;
     for (int i = 0; i < 5; i++) {
       for (int j = 0; j < 10; j++) {
@@ -228,6 +264,7 @@ void Game::update() {
       }
     }
 
+    // Checks colllision of an alien with a spaceship laser.
     for (int i = laser_beams.size() - 1; i >= 0; i--) {
       if (laser_beams[i]->getDestinationy() <=
           y_of_bottommost_alien + (windowHeight / 20)) {
@@ -264,6 +301,7 @@ void Game::update() {
       }
     }
 
+    // Controls the movement of the aliens array.
     int r1 = -1;
     int c1 = 11;
 
@@ -310,6 +348,7 @@ void Game::update() {
         }
       }
 
+      // Creating and controlling the beams from the aliens.
       if (aliens[r][c]) {
         alien_beams.push_back(new GameObject(
             "Assets/laser_beam.png",
@@ -349,6 +388,7 @@ void Game::update() {
       }
     }
 
+    // Checking for collision between the spaceship and beams from the aliens.
     for (int i = 0; i < alien_beams.size(); i++) {
       if (spaceship && collision(spaceship, alien_beams.at(i))) {
         std::cout << alien_beams.size() << std::endl;
@@ -371,6 +411,9 @@ void Game::update() {
   }
 }
 
+/**
+ * This function renders the Map, the text and all the GameObjects on the screen
+ */
 void Game::render() {
   SDL_RenderClear(renderer);
   // this is where you would add stuff to render
@@ -437,6 +480,13 @@ void Game::render() {
   SDL_RenderPresent(renderer);
 }
 
+/**
+ *Cleans the Game, specifically it,
+ *De-intializes the font library
+ *Destroys the window
+ *Destroys the renderer
+ *De-intializes all the SDL subsystems
+ */
 void Game::clean() {
   TTF_Quit();
   SDL_DestroyWindow(window);
@@ -453,29 +503,7 @@ void Game::clean() {
     std::cout << "cleaning laser" << std::endl;
   }
   laser_beams.clear();
-  std::cout << "Game is cleaned" << std::endl;
-}
 
-void Game::Restart() {
-  partialClean();
-  isStart = true;
-  isRestart = false;
-  alien_killCount = 0;
-}
-
-void Game::partialClean() {
-  if (spaceship)
-    delete spaceship;
-  if (ufo)
-    delete ufo;
-  delete map;
-  for (GameObject *laser : laser_beams) {
-    delete laser;
-    laser = nullptr;
-    std::cout << "cleaning laser" << std::endl;
-  }
-  laser_beams.clear();
-  std::cout << "Game is cleaned" << std::endl;
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 10; j++) {
       if (aliens[i][j]) {
@@ -490,8 +518,52 @@ void Game::partialClean() {
     alien_laser = nullptr;
     std::cout << "cleaning laser" << std::endl;
   }
+  alien_beams.clear();
+  std::cout << "Game is cleaned" << std::endl;
 }
 
+// The incomplete Restart function
+// void Game::Restart() {
+//   partialClean();
+//   isStart = true;
+//   isRestart = false;
+//   alien_killCount = 0;
+// }
+
+// Made for the restart function, it deletes all the elements of the game.
+// void Game::partialClean() {
+//   if (spaceship)
+//     delete spaceship;
+//   if (ufo)
+//     delete ufo;
+//   delete map;
+//   for (GameObject *laser : laser_beams) {
+//     delete laser;
+//     laser = nullptr;
+//     std::cout << "cleaning laser" << std::endl;
+//   }
+//   laser_beams.clear();
+
+//   for (int i = 0; i < 5; i++) {
+//     for (int j = 0; j < 10; j++) {
+//       if (aliens[i][j]) {
+//         delete aliens[i][j];
+//         aliens[i][j] = nullptr;
+//       }
+//     }
+//   }
+
+//   for (GameObject *alien_laser : alien_beams) {
+//     delete alien_laser;
+//     alien_laser = nullptr;
+//     std::cout << "cleaning laser" << std::endl;
+//   }
+//   std::cout << "Game is cleaned" << std::endl;
+// }
+
+/**
+ * Initializes all the elements of the game.
+ */
 void Game::partialInit() {
   spaceship = new GameObject("Assets/Spaceship.png", 0,
                              (windowHeight * 37) / 40, (windowHeight * 3) / 40,

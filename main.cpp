@@ -24,6 +24,10 @@ int main(int argc, char *argv[]) {
 
   while (game->running()) {
 
+    /*
+    The following commented code was an attempt at restarting the game. Hope to
+    fix this in the future.
+    */
     // if (game->isStart) {
     //   game->partialInit();
     //   srand((unsigned)time(0));
@@ -39,9 +43,9 @@ int main(int argc, char *argv[]) {
     if (mSPF > frameTime) {
       /*
       The desktop's framerate is 60FPS (usually), so if the update (or
-      rendering) is faster it looks like the gameobject is jumping instead of
-      moving smoothly, because the rendering takes place more than once before
-      the desktop frame changes even once.
+      rendering) is faster it looks like the GameObject is jumping instead of
+      moving smoothly, because the updating and rendering takes place more than
+      once before the desktop frame changes even once.
       */
       SDL_Delay(mSPF - frameTime);
     }
