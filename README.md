@@ -1,39 +1,19 @@
 # Space-Invaders
-Space-Invaders inspired PC game
+Space Invaders inspired PC game. 
+I created an arcade-style game using the SDL libraries in C++.
 
-## Getting Started
+![](https://github.com/ShrishShankar/Space-Invaders/blob/master/space_invaders%20gif.gif)
+###### The player can move the spaceship left and right using 'a' and 'd' keys respectively and shoot using the spacebar.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Requirements
+The C++ libraries required:
+1. SDL_2 (https://www.libsdl.org/download-2.0.php)
 
-### Prerequisites
+2. SDL_image (https://www.libsdl.org/projects/SDL_image/)
 
-What things you need to install the software and how to install them
+3. SDL_TTF (https://www.libsdl.org/projects/SDL_ttf/)
 
-```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Built With
-
-## Authors
+The libraries are available for Mac OS X, Windows, and Linux.
 
 ## License
 
@@ -41,6 +21,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Inspired by Space Invaders arcade game (https://en.wikipedia.org/wiki/Space_Invaders).
