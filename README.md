@@ -19,6 +19,3 @@ The libraries are available for Mac OS X, Windows, and Linux.
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
-
-* Inspired by Space Invaders arcade game (https://en.wikipedia.org/wiki/Space_Invaders).
