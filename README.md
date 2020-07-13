@@ -5,6 +5,7 @@ I created an arcade-style game using the SDL libraries in C++.
 ![](https://github.com/ShrishShankar/Space-Invaders/blob/master/space_invaders%20gif.gif)
 ###### The player can move the spaceship left and right using 'a' and 'd' keys respectively and shoot using spacebar.
 
+With small alterations, the code can used as a game engine to create other similar games.
 ## Requirements
 The C++ libraries required:
 1. SDL_2 (https://www.libsdl.org/download-2.0.php)
